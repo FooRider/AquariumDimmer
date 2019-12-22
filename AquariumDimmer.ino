@@ -3,6 +3,7 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 #include "RTClib.h"
+#include "Screen.h"
 
 #define DS1307_ADDRESS 0x68
 
