@@ -40,7 +40,17 @@ void CurrentStatusScreen::Loop()
     context->Display->print(now.second(), DEC);
 
     context->Display->println();
-    context->Display->print(context->nvTest, HEX);
+    context->Display->print(context->Configuration->TurnOnTimeMinutes);
+    context->Display->print(' ');
+    context->Display->print(context->Configuration->RampUpDurationMinutes);
+    context->Display->println();
+    context->Display->print(context->Configuration->TurnOffTimeMinutes);
+    context->Display->print(' ');
+    context->Display->print(context->Configuration->RampDownDurationMinutes);
+    context->Display->println();
+
+
+    //context->Display->print(context->nvTest, HEX);
 
     context->Display->display();
 }

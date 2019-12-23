@@ -10,6 +10,7 @@
 
 #include "Screen.h"
 #include "Context.h"
+#include "DimmerConfiguration.h"
 #include "CurrentStatusScreen.h"
 
 #define DS1307_ADDRESS 0x68
@@ -43,15 +44,18 @@ void setup() {
     Wire.beginTransmission(DS1307_ADDRESS);
     Wire.write(0x08);
     Wire.endTransmission(0);
-  
-    Wire.requestFrom(DS1307_ADDRESS, 1);
-    context.nvTest = Wire.read() + 1; 
 
-    Wire.beginTransmission(DS1307_ADDRESS);
-    Wire.write(0x08);
-    Wire.write(context.nvTest);
-    Wire.write(0);
-    Wire.endTransmission(0);
+    context.Configuration = new DimmerConfiguration(DS1307_ADDRESS);
+    context.Configuration->Load();
+  
+    // Wire.requestFrom(DS1307_ADDRESS, 1);
+    // context.nvTest = Wire.read() + 1; 
+
+    // Wire.beginTransmission(DS1307_ADDRESS);
+    // Wire.write(0x08);
+    // Wire.write(context.nvTest);
+    // Wire.write(0);
+    // Wire.endTransmission(0);
   }
 
   pinMode(ENCODERPIN1, INPUT_PULLUP);

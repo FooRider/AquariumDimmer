@@ -5,6 +5,7 @@
 #include <Wire.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
+#include "DimmerConfiguration.h"
 
 #ifndef RTClib_h
 #define RTClib_h
@@ -18,9 +19,10 @@ class Context
         int EncoderPin2;
         int ButtonPin;
 
+        DimmerConfiguration *Configuration;
+
         volatile int lastEncoderActivity = 0;
         volatile int encoderSteps = 0;
-        byte nvTest;
 
         //Wire *wire;
         Adafruit_SSD1306 *Display;
