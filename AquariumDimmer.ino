@@ -10,6 +10,7 @@
 
 #include "Screen.h"
 #include "Context.h"
+#include "ScreenManager.h"
 #include "DimmerConfiguration.h"
 #include "CurrentStatusScreen.h"
 
@@ -24,8 +25,6 @@
 #define BUTTONPIN 4
 
 Context context;
-
-CurrentStatusScreen *currentStatusScreen;
 
 void setup() {
   context.Display = new Adafruit_SSD1306(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
@@ -47,15 +46,6 @@ void setup() {
 
     context.Configuration = new DimmerConfiguration(DS1307_ADDRESS);
     context.Configuration->Load();
-  
-    // Wire.requestFrom(DS1307_ADDRESS, 1);
-    // context.nvTest = Wire.read() + 1; 
-
-    // Wire.beginTransmission(DS1307_ADDRESS);
-    // Wire.write(0x08);
-    // Wire.write(context.nvTest);
-    // Wire.write(0);
-    // Wire.endTransmission(0);
   }
 
   pinMode(ENCODERPIN1, INPUT_PULLUP);
@@ -64,7 +54,7 @@ void setup() {
 
   attachInterrupt(digitalPinToInterrupt(ENCODERPIN1), onEncoderPulse, CHANGE);
 
-  currentStatusScreen = new CurrentStatusScreen(&context);
+  context.ScreenManager = new ScreenManager(&context);
 }
 
 void onEncoderPulse()
@@ -94,5 +84,5 @@ void onEncoderPulse()
 
 void loop() 
 {
-  currentStatusScreen->Loop();
+  context.ScreenManager->GetCurrentScreen()->Loop();
 }

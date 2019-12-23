@@ -4,4 +4,9 @@
 #include "Screen.h"
 #include "SetTimeScreenBase.h"
 
+class SetRampUpTimeScreen : public SetTimeScreenBase
+{
+
+};
+
 #endif

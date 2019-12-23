@@ -3,4 +3,9 @@
 
 #include "Screen.h"
 
+class SetDurationScreenBase : public Screen
+{
+    
+};
+
 #endif

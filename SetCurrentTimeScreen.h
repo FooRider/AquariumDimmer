@@ -3,4 +3,9 @@
 
 #include "Screen.h"
 
+class SetCurrentTimeScreen : public Screen
+{
+
+};
+
 #endif

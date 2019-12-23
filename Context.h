@@ -6,11 +6,14 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 #include "DimmerConfiguration.h"
+#include "Screens.h"
 
 #ifndef RTClib_h
 #define RTClib_h
 #include "RTClib.h"
 #endif
+
+class ScreenManager;
 
 class Context
 {
@@ -20,6 +23,7 @@ class Context
         int ButtonPin;
 
         DimmerConfiguration *Configuration;
+        ScreenManager *ScreenManager;
 
         volatile int lastEncoderActivity = 0;
         volatile int encoderSteps = 0;

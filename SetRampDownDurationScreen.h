@@ -5,4 +5,9 @@
 #include "Screen.h"
 #include "SetDurationScreenBase.h"
 
+class SetRampDownDurationScreen : public SetDurationScreenBase
+{
+
+};
+
 #endif

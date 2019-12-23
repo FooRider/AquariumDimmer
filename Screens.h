@@ -1,0 +1,11 @@
+#ifndef Screens_h
+#define Screens_h
+
+#define SCR_CURRENTSTATUS 1
+#define SCR_SETCURRENTTIME 2
+#define SCR_SETRAMPUPTIME 3
+#define SCR_SETRAMPUPDURATION 4
+#define SCR_SETRAMPDOWNTIME 5
+#define SCR_SETRAMPDOWNDURATION 6
+
+#endif
