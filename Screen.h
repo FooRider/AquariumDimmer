@@ -5,8 +5,8 @@ class Screen
 {
 	public:
 		Screen();
-		virtual void ButtonClick();
-		virtual void EncoderRotate(int steps);
+		virtual void OnButtonClick();
+		virtual void OnEncoderRotate(int steps);
 		virtual void Loop();
 };
 

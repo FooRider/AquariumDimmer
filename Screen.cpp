@@ -4,11 +4,11 @@ Screen::Screen()
 {
 }
 
-void Screen::ButtonClick()
+void Screen::OnButtonClick()
 {
 }
 
-void Screen::EncoderRotate(int steps)
+void Screen::OnEncoderRotate(int steps)
 {
 }
 
