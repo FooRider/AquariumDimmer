@@ -2,8 +2,15 @@
 #include <Wire.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
+
+#ifndef RTClib_h
+#define RTClib_h
 #include "RTClib.h"
+#endif
+
 #include "Screen.h"
+#include "Context.h"
+#include "CurrentStatusScreen.h"
 
 #define DS1307_ADDRESS 0x68
 
@@ -15,24 +22,22 @@
 #define ENCODERPIN2 3
 #define BUTTONPIN 4
 
-volatile int lastEncoderActivity = 0;
-volatile int encoderSteps = 0;
+Context context;
 
-byte nvTest = 0;
-
-Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
-RTC_DS1307 rtc;
+CurrentStatusScreen *currentStatusScreen;
 
 void setup() {
-  if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C))
+  context.Display = new Adafruit_SSD1306(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+
+  if (!context.Display->begin(SSD1306_SWITCHCAPVCC, 0x3C))
   {
     Serial.begin(9600);
     Serial.println(F("SSD1306 allocation failed"));
     for(;;);
   }
 
-  if (!rtc.isrunning())
-    rtc.adjust(DateTime(__DATE__, __TIME__));
+  if (!context.rtc.isrunning())
+    context.rtc.adjust(DateTime(__DATE__, __TIME__));
 
   {
     Wire.beginTransmission(DS1307_ADDRESS);
@@ -40,11 +45,11 @@ void setup() {
     Wire.endTransmission(0);
   
     Wire.requestFrom(DS1307_ADDRESS, 1);
-    nvTest = Wire.read() + 1; 
+    context.nvTest = Wire.read() + 1; 
 
     Wire.beginTransmission(DS1307_ADDRESS);
     Wire.write(0x08);
-    Wire.write(nvTest);
+    Wire.write(context.nvTest);
     Wire.write(0);
     Wire.endTransmission(0);
   }
@@ -54,6 +59,8 @@ void setup() {
   pinMode(BUTTONPIN, INPUT_PULLUP);
 
   attachInterrupt(digitalPinToInterrupt(ENCODERPIN1), onEncoderPulse, CHANGE);
+
+  currentStatusScreen = new CurrentStatusScreen(&context);
 }
 
 void onEncoderPulse()
@@ -61,65 +68,27 @@ void onEncoderPulse()
   if (digitalRead(ENCODERPIN1) == LOW)
   {
     if (digitalRead(ENCODERPIN2) == LOW)
-      lastEncoderActivity = -1;
+      context.lastEncoderActivity = -1;
     else
-      lastEncoderActivity = +1;
+      context.lastEncoderActivity = +1;
   }
   else
   {
     if (digitalRead(ENCODERPIN2) == LOW)
     {
-      if (lastEncoderActivity == +1)
-        encoderSteps++;
+      if (context.lastEncoderActivity == +1)
+        context.encoderSteps++;
     }
     else
     {
-      if (lastEncoderActivity == -1)
-        encoderSteps--;
+      if (context.lastEncoderActivity == -1)
+        context.encoderSteps--;
     }
-    lastEncoderActivity = 0;
+    context.lastEncoderActivity = 0;
   }
 }
 
-void loop() {
-  display.clearDisplay();
-
-  display.setTextSize(1);
-  display.setTextColor(WHITE);
-  display.setCursor(0, 0);
-  display.cp437(true);
-
-  display.println(encoderSteps);
-
-  DateTime now = rtc.now();
-  display.print(now.year(), DEC);
-  display.write('/');
-  display.print(now.month(), DEC);
-  display.write('/');
-  display.print(now.day(), DEC);
-  display.write(' ');
-  display.print(now.hour(), DEC);
-  display.write(':');
-  display.print(now.minute(), DEC);
-  display.write(':');
-  display.print(now.second(), DEC);
-
-  display.println();
-  display.print(nvTest, HEX);
-
-  /*int value = encoderSteps;
-  if (value >= 0)
-    display.write('+');
-  else {
-    display.write('-');
-    value = -encoderSteps;
-  }
-  
-  display.write('0' + ((value / 10000) % 10));
-  display.write('0' + ((value / 1000) % 10));
-  display.write('0' + ((value / 100) % 10));
-  display.write('0' + ((value / 10) % 10));
-  display.write('0' + ((value / 1) % 10));*/
-
-  display.display();
+void loop() 
+{
+  currentStatusScreen->Loop();
 }

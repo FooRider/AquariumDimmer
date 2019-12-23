@@ -5,7 +5,11 @@
 #include <Wire.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
+
+#ifndef RTClib_h
+#define RTClib_h
 #include "RTClib.h"
+#endif
 
 class Context
 {
@@ -14,9 +18,13 @@ class Context
         int EncoderPin2;
         int ButtonPin;
 
-        Wire *wire;
+        volatile int lastEncoderActivity = 0;
+        volatile int encoderSteps = 0;
+        byte nvTest;
+
+        //Wire *wire;
         Adafruit_SSD1306 *Display;
-        RTC_DS1307 *rtc;
+        RTC_DS1307 rtc;
 };
 
 #endif
